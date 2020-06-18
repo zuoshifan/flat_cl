@@ -40,6 +40,7 @@ sigma = Tsys * omega / np.sqrt(npol * nbl * dfreq * dt)
 print sigma
 
 # generate noise
+np.random.seed(0)
 noise = np.random.normal(loc=0.0, scale=sigma, size=(nf, nra, ndec)) # K
 
 
@@ -79,7 +80,7 @@ dfreq = 1.0e6*(freqs[1] - freqs[0]) # Hz
 dfreqs = dfreq * np.arange(nf) # Hz
 # k_para = np.logspace(-2, np.log10(2.0), 200) # Mpc^-1
 # k_para = np.linspace(0.1, 1.5, 100) # Mpc^-1
-k_para = np.linspace(0.01, 2.0, 28) # Mpc^-1
+k_para = np.linspace(0.01, 2.0, 34) # Mpc^-1
 k_perp = []
 Pk2 = []
 ls = np.sort(np.array(lmodes.keys()))
@@ -124,8 +125,6 @@ for l in ls:
 
 # plot Cldf
 plt.figure()
-# import pdb; pdb.set_trace()
-# plt.pcolormesh(np.array(lused), dfreqs, np.array(Cldfs))
 ndf = 25
 dfs = 1.0e-6 * dfreqs[:ndf+1] # MHz
 dfs[0] += 0.01
@@ -140,7 +139,8 @@ plt_data = 1.0e6*np.array(Cldfs)[:, :ndf].T # mK^2
 # plt.pcolormesh(lused, dfs, plt_data, vmax=8.0e-13)
 plt.pcolormesh(lused, dfs, plt_data)
 cb = plt.colorbar()
-cb.set_label(r'$C_l(\Delta \nu)$ / mK${}^2$$', fontsize=16)
+cb.set_ticks([0.0, 2.0e-7, 4.0e-7, 6.0e-7, 8.0e-7, 10.0e-7])
+cb.set_label(r'$C_l(\Delta \nu)$ / mK${}^2$', fontsize=16)
 plt.xlim(lused[0], 3.2)
 plt.ylim(dfs[0], 1.0)
 ax = plt.gca()
@@ -158,53 +158,32 @@ k_perp = np.array(k_perp)
 Pk2 = np.array(Pk2)
 print k_perp.shape, Pk2.shape
 
-# # plot Pk2
-# plt.figure()
-# # plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=0, vmax=10)
-# # plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=0, vmax=10)
-# # plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=-10, vmax=100)
-# # Pklog = np.where(Pk2>0, np.log10(Pk2), 0)
-# Pk2_1 = Pk2.copy() # mK^2 Mpc^3
-# Pk2_1[Pk2_1<=0] = Pk2_1[Pk2_1>0].min()
-# Pklog = np.log10(Pk2_1)
-# # plt.pcolormesh(k_perp, k_para, Pklog.T)
-# k_perp_log = np.log10(k_perp)
-# k_para_log = np.log10(k_para)
-# # plt.pcolormesh(k_perp_log, k_para_log, Pk2.T, vmin=-10, vmax=50)
-# plt.pcolormesh(k_perp_log, k_para_log, Pklog.T, vmin=-2, vmax=3)
-# cb = plt.colorbar()
-# cb.set_ticks([-2, -1, 0, 1, 2, 3])
-# cb.set_ticklabels([r'$10^{-2}$', r'$10^{-1}$', r'$10^{0}$', r'$10^{1}$', r'$10^{2}$', r'$10^{3}$', ])
-# cb.set_label(r'$P(k_\perp, \, k_\parallel)$ / mK${}^2$Mpc${}^3$', fontsize=16)
-# plt.xlim(-1.22, -0.18)
-# plt.ylim(-2.0, 0.2)
-# ax = plt.gca()
-# ax.set_xticks([np.log10(0.1), np.log10(0.2), np.log10(0.5)])
-# ax.set_xticklabels(['0.1', '0.2', '0.5'])
-# ax.set_yticks([-2.0, -1.0, 0.0])
-# ax.set_yticklabels(['0.01', '0.1', '1'])
-# plt.xlabel(r'$k_\perp$ / Mpc${}^{-1}$', fontsize=16)
-# plt.ylabel(r'$k_\parallel$ / Mpc${}^{-1}$', fontsize=16)
-# plt.savefig('Pk2_decomp1.png')
-# plt.close()
-
-# exit()
-
-# # compute Pk
-# kmodes = defaultdict(list)
-# for xi, kx in enumerate(k_perp):
-#     for yi, ky in enumerate(k_para):
-#         k = (kx**2 + ky**2)**0.5
-#         kmodes[np.around(k, 2)].append(Pk2[xi, yi])
-
-# ks = np.sort(np.array(kmodes.keys()))
-# Pk = np.array([ np.mean(kmodes[k]) for k in ks ])
-# D2 = ks**3 * Pk / (2 * np.pi**2)
-
-# plt.figure()
-# # plt.plot(ks, Pk)
-# # plt.semilogy(ks, Pk)
-# # plt.semilogy(ks, D2)
-# plt.loglog(ks, D2)
-# plt.savefig('Pk1d_decomp1.png')
-# plt.close()
+# plot Pk2
+plt.figure()
+# plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=0, vmax=10)
+# plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=0, vmax=10)
+# plt.pcolormesh(k_perp, k_para, Pk2.T, vmin=-10, vmax=100)
+# Pklog = np.where(Pk2>0, np.log10(Pk2), 0)
+Pk2_1 = Pk2.copy() # mK^2 Mpc^3
+Pk2_1[Pk2_1<=0] = Pk2_1[Pk2_1>0].min()
+Pklog = np.log10(Pk2_1)
+# plt.pcolormesh(k_perp, k_para, Pklog.T)
+k_perp_log = np.log10(k_perp)
+k_para_log = np.log10(k_para)
+# plt.pcolormesh(k_perp_log, k_para_log, Pk2.T, vmin=-10, vmax=50)
+plt.pcolormesh(k_perp_log, k_para_log, Pklog.T, vmin=-2, vmax=3)
+cb = plt.colorbar()
+cb.set_ticks([-2, -1, 0, 1, 2, 3])
+cb.set_ticklabels([r'$10^{-2}$', r'$10^{-1}$', r'$10^{0}$', r'$10^{1}$', r'$10^{2}$', r'$10^{3}$', ])
+cb.set_label(r'$P(k_\perp, \, k_\parallel)$ / mK${}^2$Mpc${}^3$', fontsize=16)
+plt.xlim(-1.22, -0.18)
+plt.ylim(-2.0, 0.2)
+ax = plt.gca()
+ax.set_xticks([np.log10(0.1), np.log10(0.2), np.log10(0.5)])
+ax.set_xticklabels(['0.1', '0.2', '0.5'])
+ax.set_yticks([-2.0, -1.0, 0.0])
+ax.set_yticklabels(['0.01', '0.1', '1'])
+plt.xlabel(r'$k_\perp$ / Mpc${}^{-1}$', fontsize=16)
+plt.ylabel(r'$k_\parallel$ / Mpc${}^{-1}$', fontsize=16)
+plt.savefig('results/Pk2d.png')
+plt.close()

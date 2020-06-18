@@ -41,6 +41,7 @@ sigma = Tsys * omega / np.sqrt(npol * nbl * dfreq * dt)
 print sigma
 
 # generate noise
+np.random.seed(0)
 noise = np.random.normal(loc=0.0, scale=sigma, size=(nf, nra, ndec)) # K
 
 
@@ -182,5 +183,5 @@ plt.xlim(0.01, 1.0)
 plt.ylim(0.1, 1000.0)
 plt.xlabel(r'$k$ / Mpc${}^{-1}$', fontsize=16)
 plt.ylabel(r'$P(k)$ / mK${}^2$Mpc${}^{3}$', fontsize=16)
-plt.savefig('Pk1d_decomp1.png')
+plt.savefig('results/Pk1d.png')
 plt.close()

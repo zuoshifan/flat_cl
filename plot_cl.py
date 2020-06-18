@@ -83,17 +83,19 @@ for i, l in enumerate([202, 997, 2002]):
     # plot Cl
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*fg_Cl, origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/fg_Cl_%04d.png' % l)
     plt.close()
 
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*HI_Cl, origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/HI_Cl_%04d.png' % l)
     plt.close()
 

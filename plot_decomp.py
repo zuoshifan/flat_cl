@@ -41,6 +41,7 @@ sigma = Tsys * omega / np.sqrt(npol * nbl * dfreq * dt)
 print sigma
 
 # generate noise
+np.random.seed(0)
 noise = np.random.normal(loc=0.0, scale=sigma, size=(nf, nra, ndec)) # K
 
 
@@ -78,11 +79,6 @@ for xi in range(nra):
 
 dfreq = 1.0e6*(freqs[1] - freqs[0]) # Hz
 dfreqs = dfreq * np.arange(nf) # Hz
-# k_para = np.logspace(-2, np.log10(2.0), 200) # Mpc^-1
-# k_para = np.linspace(0.1, 1.5, 100) # Mpc^-1
-# k_para = np.linspace(0.01, 2.0, 28) # Mpc^-1
-# k_perp = []
-# Pk2 = []
 # ls = np.sort(np.array(lmodes.keys()))
 # for l in ls:
 for i, l in enumerate([202, 997, 2002]):
@@ -113,32 +109,36 @@ for i, l in enumerate([202, 997, 2002]):
 
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*L, origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/L_%04d.png' % l)
     plt.close()
 
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*S, origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/S_%04d.png' % l)
     plt.close()
 
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*(Cl - L - S), origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/N_%04d.png' % l)
     plt.close()
 
     plt.figure()
     plt.imshow((l*(l+1)/(2*np.pi)) * 1.0e6*(Cl - L), origin='lower', aspect='auto', extent=[freqs[0], freqs[-1], freqs[0], freqs[-1]]) # mK^2
-    plt.colorbar()
-    plt.xlabel(r'$\nu$ / MHz', fontsize=16)
-    plt.ylabel(r'$\nu \, {}^\prime$ / MHz', fontsize=16)
+    cb = plt.colorbar()
+    cb.ax.set_ylabel(r'$C_l(\nu_1, \, \nu_2)$ / mK${}^2$', fontsize=16)
+    plt.xlabel(r'$\nu_1$ / MHz', fontsize=16)
+    plt.ylabel(r'$\nu_2$ / MHz', fontsize=16)
     plt.savefig('results/S+N_%04d.png' % l)
     plt.close()
